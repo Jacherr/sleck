@@ -17,6 +17,7 @@ pub static FLAG_OVERFLOW: u8 = 1 << 6;
 /// Negative Flag N
 pub static FLAG_NEGATIVE: u8 = 1 << 7;
 
+/// NES 2A03 Emulator
 pub struct Cpu {
     /// Accumulator
     pub a: u8,
@@ -34,14 +35,17 @@ pub struct Cpu {
     pub halt: bool,
 }
 impl Cpu {
+    /// Set processor status flag
     pub fn p_set(&mut self, flag: u8) {
         self.p |= flag;
     }
 
+    /// Unset processor status flag
     pub fn p_unset(&mut self, flag: u8) {
         self.p &= !flag;
     }
 
+    /// Get processor status flag state
     pub fn p_get(&self, flag: u8) -> bool {
         (self.p & flag) != 0
     }
