@@ -1,3 +1,8 @@
+use crate::bus::Bus;
+use crate::ram::Ram;
+
+pub mod interrupt;
+
 /// Carry Flag C
 pub static FLAG_CARRY: u8 = 1 << 0;
 /// Zero Flag Z
@@ -10,7 +15,7 @@ pub static FLAG_DECIMAL_MODE: u8 = 1 << 3;
 /// Break Command Flag B
 pub static FLAG_BREAK_COMMAND: u8 = 1 << 4;
 /// Unused Flag \
-/// Unused on 2A03
+/// Unused on 2A03, always 1
 pub static FLAG_UNUSED: u8 = 1 << 5;
 /// Overflow Flag V
 pub static FLAG_OVERFLOW: u8 = 1 << 6;
@@ -33,14 +38,33 @@ pub struct Cpu {
     pub pc: u16,
     /// Whether CPU is halted (all execution stopped)
     pub halt: bool,
+    /// System bus
+    pub bus: Bus,
 }
 impl Cpu {
+    /// Initialise CPU
+    pub fn new() -> Self {
+        let ram = Ram::new();
+        let bus = Bus::new(ram);
+
+        Self {
+            a: 0,
+            x: 0,
+            y: 0,
+            pc: 0,
+            p: 0b00100100,
+            s: 0x00FD,
+            halt: false,
+            bus,
+        }
+    }
+
     /// Set processor status flag
     pub fn p_set(&mut self, flag: u8) {
         self.p |= flag;
     }
 
-    /// Unset processor status flag
+    /// Unset (zero) processor status flag
     pub fn p_unset(&mut self, flag: u8) {
         self.p &= !flag;
     }
