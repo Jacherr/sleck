@@ -13,7 +13,7 @@ impl Ram {
     /// `addr` must be 0x0000 - 0x07FF inclusive
     #[inline(always)]
     #[cfg(not(debug_assertions))]
-    pub unsafe fn write(&mut self, addr: usize, data: u8) {
+    pub fn write(&mut self, addr: usize, data: u8) {
         unsafe {
             *self.0.get_unchecked_mut(addr) = data;
         }
@@ -31,7 +31,7 @@ impl Ram {
     /// `addr` must be 0x0000 - 0x07FF inclusive
     #[inline(always)]
     #[cfg(not(debug_assertions))]
-    pub unsafe fn read(&self, addr: usize) -> u8 {
+    pub fn read(&self, addr: usize) -> u8 {
         unsafe { *self.0.get_unchecked(addr) }
     }
 
