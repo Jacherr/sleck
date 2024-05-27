@@ -33,7 +33,7 @@ pub struct Cpu {
     /// Processor status flag bits
     pub p: u8,
     /// Stack pointer
-    pub s: u8,
+    pub sp: u8,
     /// Program counter
     pub pc: u16,
     /// Whether CPU is halted (all execution stopped)
@@ -53,7 +53,7 @@ impl Cpu {
             y: 0,
             pc: 0,
             p: 0b00100100,
-            s: 0x00FD,
+            sp: 0x00FD,
             halt: false,
             bus,
         }
@@ -72,5 +72,19 @@ impl Cpu {
     /// Get processor status flag state
     pub fn p_get(&self, flag: u8) -> bool {
         (self.p & flag) != 0
+    }
+
+    /// Push value to NES stack
+    pub fn stack_push(&mut self, data: u8) {
+        // align with stack
+        self.bus.write(self.sp as u16 | (0x01 << 8), data);
+        self.sp -= 1;
+    }
+
+    /// Pop value from NES stack
+    pub fn stack_pop(&mut self) -> u8 {
+        // align with stack
+        self.sp += 1;
+        self.bus.read(self.sp as u16 | (0x01 << 8))
     }
 }
