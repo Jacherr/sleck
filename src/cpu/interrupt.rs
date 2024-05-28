@@ -11,7 +11,7 @@ pub enum InterruptType {
 }
 
 impl Cpu {
-    /// Handle 6502 interrupt. This function should be called when CPU detects interrupt has
+    /// Handle 2A03 interrupt. This function should be called when CPU detects that an interrupt has
     /// happened.
     pub fn interrupt(&mut self, interrupt: InterruptType) {
         match interrupt {
@@ -57,6 +57,7 @@ impl Cpu {
                 let low = self.bus.read(0xfffc);
                 let high = self.bus.read(0xfffd);
                 self.pc = u16::from_le_bytes([low, high]);
+                self.cycle = 0;
             },
             _ => {},
         }

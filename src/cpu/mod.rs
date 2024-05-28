@@ -1,6 +1,7 @@
 use crate::bus::Bus;
 use crate::ram::Ram;
 
+pub mod instruction;
 pub mod interrupt;
 
 /// Carry Flag C
@@ -40,6 +41,8 @@ pub struct Cpu {
     pub halt: bool,
     /// System bus
     pub bus: Bus,
+    /// Current cpu cycle number (0 on reset)
+    pub cycle: usize,
 }
 impl Cpu {
     /// Initialise CPU
@@ -56,6 +59,7 @@ impl Cpu {
             sp: 0x00FD,
             halt: false,
             bus,
+            cycle: 0,
         }
     }
 
